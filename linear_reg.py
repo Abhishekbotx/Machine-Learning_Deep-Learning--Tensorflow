@@ -20,7 +20,9 @@ df = pd.DataFrame(data)
 print("dataframe::", df)
 
 # Features (X) and Labels (y)
-X = df[["hours"]]
+X = df[["hours"]] # its a 2d array which looks like this:[
+#                                                           [1],[2],[3],[4],[5],[6],[7],[8],[9],[10]
+#                                                        ]
 y = df["marks"]
 
 # Train-test split
@@ -41,8 +43,13 @@ print("R² Score:", r2_score(y_test, y_pred))
 print("MSE:", mean_squared_error(y_test, y_pred))
 
 # How much marks if someone studies 9 hours?
-print("Marks for 6 hours study:", model_simple.predict([[6]])[0])
-print("Marks for 9 hours study:", model_simple.predict([[9]])[0])
+# predict expects 2d array and returns 1d array-> array([76.7029703]) 
+print("Marks for 6 hours study:", model_simple.predict([[6]])[0]) # so we are extracting [0]th elememnt of response
+print("Marks for 9 hours study:", model_simple.predict([[9]])[0]) # shape (1, 1)
+print("Marks for 6 and 9 hours study:", model_simple.predict([[6],[9]])) 
+# shape (2, 1) 2rows 1col 
+#  n_samples = 2 → because values are 6 and 9
+#  n_features = 1 → only one feature: hours                                                                     (n_samples, n_features) → (2,1)
 
 
 plt.scatter(X_train, y_train)
@@ -70,6 +77,7 @@ print("Dataset Preview:\n", data.head())
 
 # Features (number_courses, time_study)
 X = data[["number_courses", "time_study"]]
+print("x::val::",X)
 y = data["Marks"]
 
 # Split into train-test

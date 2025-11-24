@@ -27,4 +27,31 @@ for i in range(10):
     plt.axis('off') #off is used to remove the axes, ticks, borders, so image looks clean
 plt.show()
 
+# Build model: Define structure of neural network :-) You decide how many brain layers you'll use
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)), # neuural netowrk expects 1D input
+    keras.layers.Dense(128, activation='relu'), # hidden layer
+    keras.layers.Dense(64, activation='relu'),  # hidden layer
+    keras.layers.Dense(10, activation='softmax')# output layer, softmax converts output numbers into probabilities that sum to 1.
+])                                              # Eg: [0.02, 0.01, 0.95, 0.01, ...]
+
+# Compile: Choose optimization + loss + metrics :-) You choose how you'll learn (speed, rules, scoring)
+model.compile(
+    optimizer='adam', # Algorithm that adjusts weights during training
+    loss='sparse_categorical_crossentropy', # Loss function for multi-class classification
+    metrics=['accuracy'] # Track how often predictions are correct
+)
+
+# Train: Model learns patterns and adjusts weights :-) You practice writing digits many times
+history = model.fit(
+    x_train, y_train,
+    epochs=5, # Model sees the entire dataset 5 times
+    validation_split=0.2, # 20% of training data used as validation
+    batch_size=32 # Model updates weights after every 32 samples
+)
+
+# Evaluate: Test how well it performs on unseen data :-) Someone tests you on new handwriting
+test_loss, test_acc = model.evaluate(x_test, y_test)
+print(f"Test accuracy: {test_acc:.4f} {test_loss}")
+
 

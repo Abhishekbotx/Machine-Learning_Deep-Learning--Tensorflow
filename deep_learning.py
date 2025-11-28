@@ -31,17 +31,20 @@ plt.show()
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(28, 28)), # neuural netowrk expects 1D input
     keras.layers.Dense(128, activation='relu'), # hidden layer
+    keras.layers.Dropout(0.2),                  # used dropout to avoid overfitting
     keras.layers.Dense(64, activation='relu'),  # hidden layer
     keras.layers.Dense(10, activation='softmax')# output layer, softmax converts output numbers into probabilities that sum to 1.
-])                                              # Eg: [0.02, 0.01, 0.95, 0.01, ...]
+])      
 
+# Eg: [0.02, 0.01, 0.95, 0.01, ...]
+
+loss_fn = keras.losses.SparseCategoricalCrossentropy(from_logits=True)
 # Compile: Choose optimization + loss + metrics :-) You choose how you'll learn (speed, rules, scoring)
 model.compile(
     optimizer='adam', # Algorithm that adjusts weights during training
-    loss='sparse_categorical_crossentropy', # Loss function for multi-class classification
+    loss=loss_fn, # Loss function for multi-class classification
     metrics=['accuracy'] # Track how often predictions are correct
 )
-
 # Train: Model learns patterns and adjusts weights :-) You practice writing digits many times
 history = model.fit(
     x_train, y_train,

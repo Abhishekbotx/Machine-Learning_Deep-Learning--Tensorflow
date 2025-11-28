@@ -1,5 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
+import matplotlib.pyplot as plt
+import numpy as np
 
 # MNIST already comes built-in with Keras
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
@@ -16,7 +18,7 @@ x_test  = x_test.reshape(-1, 28, 28, 1) / 255.0
 # Pixel values range from 0→255. Scaling to (0→1) makes training faster and stable.
 
 
-#COnvo 2D shrinks size
+#Convo 2D shrinks size
 # BUILD CNN MODEL::
 model = keras.Sequential([
     
@@ -27,7 +29,7 @@ model = keras.Sequential([
     keras.layers.MaxPooling2D((2,2)), #convert shape to 14 x 14 x 32
     # Note: Pooling halves width and height:
 
-    # 3️. Second convolution layer — detects more complex features
+    # 3️. Second convolution layer — detects more complex features(patterns)
     keras.layers.Conv2D(64, (3,3), activation='relu'),
 
     # 4️. Pool again to compress information
@@ -55,16 +57,40 @@ model.compile(
 
 
 # TRAIN THE MODEL
-history = model.fit(
-    x_train, y_train,
-    epochs=5,                # How many times the model sees entire dataset
-    validation_split=0.2     # 20% of training data reserved for validation
-)
+# history = model.fit(
+#     x_train, y_train,
+#     epochs=5,                # How many times the model sees entire dataset
+#     validation_split=0.2     # 20% of training data reserved for validation
+# )
 
 
 
-# EVALUATE ON TEST DATA
-test_loss, test_acc = model.evaluate(x_test, y_test)
+# # EVALUATE ON TEST DATA
+# test_loss, test_acc = model.evaluate(x_test, y_test)
+# print(f" Test accuracy: {test_acc:.4f}")
+# print(f" Test loss: {test_loss:.4f}")
 
-print(f" Test accuracy: {test_acc:.4f}")
-print(f" Test loss: {test_loss:.4f}")
+
+# Save + Load
+# model.save("mnist_cnn_model.keras") #Saves the entire trained model into a file named:mnist_cnn_model.keras
+loaded_model = keras.models.load_model("mnist_cnn_model.keras") #Load the saved model back
+# Now, loaded_model is the same as your model, but:
+# • You didn’t retrain it
+# • It has learned weights already
+# • You can use it for predictions directly
+
+# Prediction test
+sample = x_test[0].reshape(1, 28, 28, 1)  # Batch size = 1 (predicting 1 image at a time)
+prediction = loaded_model.predict(sample) # Make prediction using the loaded model
+print(f"prediction: {prediction}")
+# Model processes the image and outputs a prediction vector like: 
+#prediction: [[2.7433719e-08 1.7853939e-09 1.5923648e-05 1.2158064e-05 1.9324667e-10 
+#              1.7967013e-09  4.8422772e-12 9.9996984e-01 1.0685101e-08 1.9827498e-06]]
+
+# Display
+plt.imshow(sample.reshape(28, 28), cmap='gray')
+plt.title("Sample Image")
+plt.axis('off')
+plt.show()
+
+print("\n🧠 Predicted Digit:", np.argmax(prediction))

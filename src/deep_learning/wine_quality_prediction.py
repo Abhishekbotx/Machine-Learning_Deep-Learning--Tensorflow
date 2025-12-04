@@ -56,3 +56,18 @@ history = model.fit(
 test_loss, test_accuracy = model.evaluate(X_test, y_test)
 print(f"Test Accuracy: {test_accuracy * 100:.2f}%")
 
+# Plot training history
+plt.plot(history.history["accuracy"], label="Train Accuracy")
+plt.plot(history.history["val_accuracy"], label="Validation Accuracy")
+plt.xlabel("Epochs")
+plt.ylabel("Accuracy")
+plt.legend()
+plt.title("Model Accuracy")
+plt.show()
+
+# Predict a sample
+sample_input = np.expand_dims(X_test[0], axis=0)  # Take one test sample
+predicted_class = np.argmax(model.predict(sample_input))
+print(f"Predicted Class: {predicted_class}, Actual Class: {y_test[0]}")
+
+

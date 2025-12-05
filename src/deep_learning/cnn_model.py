@@ -23,7 +23,7 @@ x_test  = x_test.reshape(-1, 28, 28, 1) / 255.0
 model = keras.Sequential([
     
     # 1️. Convolution layer (detects edges, strokes, patterns)
-    keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)),
+    keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(28,28,1)), # 32 filters of size 3x3
     
     # 2️. Max pooling — reduces image size while keeping important features
     keras.layers.MaxPooling2D((2,2)), #convert shape to 14 x 14 x 32

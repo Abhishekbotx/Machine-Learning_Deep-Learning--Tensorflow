@@ -28,8 +28,8 @@ X_test = scaler.transform(X_test)
 # Build model
 model = models.Sequential([
     layers.Dense(64, activation='relu', input_shape=(X_train.shape[1],)),
-    layers.Dense(32, activation='relu'),
-    layers.Dense(1, activation='sigmoid')  # Binary classification
+    layers.Dense(32, activation='relu'),# Hidden layers are not tied to any specific classification type on their own.
+    layers.Dense(1, activation='sigmoid') # Final output layer  → defines binary classification 
 ])
 
 # Compile model
@@ -38,8 +38,30 @@ model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy']
 # Train model
 history = model.fit(X_train, y_train, epochs=20, batch_size=32, validation_data=(X_test, y_test))
 
+#Save & Load
+model.save("models/breast_cancer_model.keras")
+loaded_model = tf.keras.models.load_model("models/breast_cancer_model.keras") #Load the saved model back
 
 # Evaluate model
-test_loss, test_acc = model.evaluate(X_test, y_test)
+test_loss, test_acc = loaded_model.evaluate(X_test, y_test)
 print(f'Test Accuracy: {test_acc * 100:.2f}%')
 
+# Plot accuracy and loss using Matplotlib
+plt.figure(figsize=(12, 4))
+
+plt.subplot(1, 2, 1)
+plt.plot(history.history['accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_accuracy'], label='Val Accuracy')
+plt.xlabel('Epochs')
+plt.ylabel('Accuracy')
+plt.legend()
+plt.title('Model Accuracy')
+
+plt.subplot(1, 2, 2)
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Val Loss')
+plt.xlabel('Epochs')
+plt.ylabel('Loss')
+plt.legend()
+plt.title('Model Loss')
+plt.show()

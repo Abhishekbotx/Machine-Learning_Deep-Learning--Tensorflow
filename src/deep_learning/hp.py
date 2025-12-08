@@ -27,6 +27,8 @@ x_test = scaler.transform(x_test)        # Use the same scaling parameters to tr
 # This is called data leakage, which can lead to unrealistically good performance and poor generalization to new data
 # Test data should only be used for evaluation after the model is trained
 
+# In real-world applications, new data arrives after training. We do not get to recompute the mean and std for each new data point
+# The model should be able to handle unseen data using the same scaling applied during training
 
 # Build model
 model = models.Sequential([
